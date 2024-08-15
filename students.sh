@@ -191,12 +191,12 @@ do
 			then
 				echo "The file is empty."
 			else
-				names=$(cut -d '|' -f1 "$inf" | sort -u) : > "$temp"
+				names=$(cut -d '|' -f1 "$inf" | sort -u) : > "$tempf"
 				for n in $names;
 				do
-					grep "^$n|" "$inf" | head -1 >> "$temp"
+					grep "^$n|" "$inf" | head -1 >> "$tempf"
 				done
-				echo "All the unique student records have been saved in $temp."
+				echo "All the unique student records have been saved in $tempf."
 			fi
 			;;	
 		9)
