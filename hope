@@ -1,6 +1,56 @@
-#!/usr/bin/awk -f
+#!/bin/bash
+choice=1
+while [ $choice -eq 1 ]
+do
+	read -p "Enter the four details (separated by spaces) " name roll phone address
+	details="$name|$roll|$phone|$address"
+	echo "$details" >> Students.dat
+	echo "Your details have been updated."
+	read -p "Press 1 to continue 0 to exit: " choice
+done
+while [ 1 ] 
+	echo "MENU"
+	echo "1. Sort the records in reverse order"
+	echo "2. REplace lower case letters with upper case letters"
+	echo "3. Records with unique names"
+	echo "4. Display 2nd and 3rd lines"
+	echo ""
+do
+	read -p "Enter your choice: " ch
+	case $ch in
+	1)
+		sort -t '|' -k 2 -r Students.dat >> sorted.dat
+		echo "File after sorting:"
+		cat sorted.dat
+		;;
+	2)
+		tr [:lower:] [:upper:] < sorted.dat
+		echo "File updated"
+		;;
+	3)
+		list=`cat sorted.dat | sort -t'|' -k1 | cut -d'|' -f1 | uniq -c | tr -s " " | cut -d' ' -f3`
+		for i in $list; do
+			found=`cat sorted.dat | grep -w "^$i" | head -1`
+			echo $found
+		done
+		;;
+	4)
+		cat Students.dat | head -n 3 | tail -n 2
+		;;
+	5)
+		exit;;
+	*) 
+		echo "\n Invalid key "
+		;;
+
+esac	
+done
+
+
 
 // Average.awk
+
+#!/usr/bin/awk -f
 
 BEGIN {
 	FS="~" 
@@ -20,23 +70,6 @@ END {
 }
 
 
-// Marks.dat
-
-NAME~ROLL~SUB1~SUB2~SUB3
-abc~001~50~76~45
-pqr~002~90~82~79
-mno~003~49~57~66
-xyz~004~29~58~70
-ijk~005~77~44~96
-
-
-// awk1.awk
-
-#!/usr/bin/awk -f
-
-BEGIN {FS="~"; highest=0}; NR>1 {total=$3+$4+$5; if(highest<total) {highest=total; rec=$0}}; END {print rec" Highest marks: "highest}
-
-
 // awk2.awk
 
 #!/usr/bin/awk -f
@@ -51,40 +84,21 @@ END {printf("Top Scorers:\n\t%s -> %s (%d)\n\t%s -> %s (%d)\n\t%s -> %s (%d)\n",
 
 
 
-
-echo "enter the subject name:"
-read sub_name
-awk -v subName=$sub_name -f prog4b3.awk Marks.dat
-#here passing the subName as as variable to prog4b3.awk
-
+// awk1.awk
 
 #!/usr/bin/awk -f
-BEGIN{
-	FS="~";
-	subject1=0;
-	subject2=0;
-	subject3=0;	
-};
-NR==1{
-	sub1=$3;
-	sub2=$4;
-	sub3=$5;
-}
-NR>1 && NR<6{
-	if($3>subject1){
-		subject1=$3;
-		rec1=$1;	
-	}
-	if($4>subject2){
-		subject2=$4;
-		rec2=$1;
-	}
-	if($5>subject3){
-		subject3=$5;
-		rec3=$1;	
-	}
-};
-END{
-	printf("Top scorer\n%s - %s(%d)\n%s - %s(%d)\n%s - %s(%d)\n",sub1,rec1,subject1,sub2,rec2,subject2, sub3, rec3, subject3);	
-}
+
+BEGIN {FS="~"; highest=0}; NR>1 {total=$3+$4+$5; if(highest<total) {highest=total; rec=$0}}; END {print rec" Highest marks: "highest}
+
+
+
+// Marks.dat
+
+NAME~ROLL~SUB1~SUB2~SUB3
+abc~001~50~76~45
+pqr~002~90~82~79
+mno~003~49~57~66
+xyz~004~29~58~70
+ijk~005~77~44~96
+
 
