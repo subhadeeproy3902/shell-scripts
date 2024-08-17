@@ -50,3 +50,10 @@ NR>1 {if(h1<=$3) {h1=$3; name1=$1}; if(h2<=$4) {h2=$4; name2=$1}; if(h3<=$5) {h3
 END {printf("Top Scorers:\n\t%s -> %s (%d)\n\t%s -> %s (%d)\n\t%s -> %s (%d)\n",s1,name1,h1,s2,name2,h2,s3,name3,h3)}
 
 
+
+
+echo "enter the subject name:"
+read sub_name
+awk -v subName=$sub_name -f prog4b3.awk Marks.dat
+#here passing the subName as as variable to prog4b3.awk
+
