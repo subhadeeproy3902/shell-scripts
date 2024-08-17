@@ -57,3 +57,34 @@ read sub_name
 awk -v subName=$sub_name -f prog4b3.awk Marks.dat
 #here passing the subName as as variable to prog4b3.awk
 
+
+#!/usr/bin/awk -f
+BEGIN{
+	FS="~";
+	subject1=0;
+	subject2=0;
+	subject3=0;	
+};
+NR==1{
+	sub1=$3;
+	sub2=$4;
+	sub3=$5;
+}
+NR>1 && NR<6{
+	if($3>subject1){
+		subject1=$3;
+		rec1=$1;	
+	}
+	if($4>subject2){
+		subject2=$4;
+		rec2=$1;
+	}
+	if($5>subject3){
+		subject3=$5;
+		rec3=$1;	
+	}
+};
+END{
+	printf("Top scorer\n%s - %s(%d)\n%s - %s(%d)\n%s - %s(%d)\n",sub1,rec1,subject1,sub2,rec2,subject2, sub3, rec3, subject3);	
+}
+
