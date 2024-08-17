@@ -1,0 +1,52 @@
+#!/usr/bin/awk -f
+
+// Average.awk
+
+BEGIN {
+	FS="~" 
+	sum=0
+	printf "Enter the subject number (1, 2, 3):"
+	getline n < "-"
+	
+}
+
+NR>1 {
+	sum=sum+$(n+2)
+}
+
+END {
+	avg=sum/4
+	print "Average: "avg
+}
+
+
+// Marks.dat
+
+NAME~ROLL~SUB1~SUB2~SUB3
+abc~001~50~76~45
+pqr~002~90~82~79
+mno~003~49~57~66
+xyz~004~29~58~70
+ijk~005~77~44~96
+
+
+// awk1.awk
+
+#!/usr/bin/awk -f
+
+BEGIN {FS="~"; highest=0}; NR>1 {total=$3+$4+$5; if(highest<total) {highest=total; rec=$0}}; END {print rec" Highest marks: "highest}
+
+
+// awk2.awk
+
+#!/usr/bin/awk -f
+  
+BEGIN {FS="~"; h1=0; h2=0; h3=0}
+
+NR==1 {s1=$3; s2=$4; s3=$5}
+
+NR>1 {if(h1<=$3) {h1=$3; name1=$1}; if(h2<=$4) {h2=$4; name2=$1}; if(h3<=$5) {h3=$5; name3=$1}}
+
+END {printf("Top Scorers:\n\t%s -> %s (%d)\n\t%s -> %s (%d)\n\t%s -> %s (%d)\n",s1,name1,h1,s2,name2,h2,s3,name3,h3)}
+
+
