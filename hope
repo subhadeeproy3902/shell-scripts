@@ -1,104 +1,96 @@
-#!/bin/bash
-choice=1
-while [ $choice -eq 1 ]
-do
-	read -p "Enter the four details (separated by spaces) " name roll phone address
-	details="$name|$roll|$phone|$address"
-	echo "$details" >> Students.dat
-	echo "Your details have been updated."
-	read -p "Press 1 to continue 0 to exit: " choice
-done
-while [ 1 ] 
-	echo "MENU"
-	echo "1. Sort the records in reverse order"
-	echo "2. REplace lower case letters with upper case letters"
-	echo "3. Records with unique names"
-	echo "4. Display 2nd and 3rd lines"
-	echo ""
-do
-	read -p "Enter your choice: " ch
-	case $ch in
-	1)
-		sort -t '|' -k 2 -r Students.dat >> sorted.dat
-		echo "File after sorting:"
-		cat sorted.dat
-		;;
-	2)
-		tr [:lower:] [:upper:] < sorted.dat
-		echo "File updated"
-		;;
-	3)
-		list=`cat sorted.dat | sort -t'|' -k1 | cut -d'|' -f1 | uniq -c | tr -s " " | cut -d' ' -f3`
-		for i in $list; do
-			found=`cat sorted.dat | grep -w "^$i" | head -1`
-			echo $found
-		done
-		;;
-	4)
-		cat Students.dat | head -n 3 | tail -n 2
-		;;
-	5)
-		exit;;
-	*) 
-		echo "\n Invalid key "
-		;;
-
-esac	
-done
-
-
-
-// Average.awk
+// 4b1
 
 #!/usr/bin/awk -f
 
 BEGIN {
-	FS="~" 
-	sum=0
-	printf "Enter the subject number (1, 2, 3):"
-	getline n < "-"
-	
-}
-
-NR>1 {
-	sum=sum+$(n+2)
-}
-
+	FS="~";
+	highest=0	
+};
+NR>1 && NR<6 {
+	total=$3+$4+$5; 
+	if(total > highest){
+		highest=total;
+		rec=$0	
+	}	
+};
 END {
-	avg=sum/4
-	print "Average: "avg
+	print rec "~"highest	
 }
 
 
-// awk2.awk
+// 4b2
 
 #!/usr/bin/awk -f
-  
-BEGIN {FS="~"; h1=0; h2=0; h3=0}
+BEGIN{
+	FS="~";
+	subject1=0;
+	subject2=0;
+	subject3=0;	
+};
+NR==1{
+	sub1=$3;
+	sub2=$4;
+	sub3=$5;
+}
+NR>1 && NR<6{
+	if($3>subject1){
+		subject1=$3;
+		rec1=$1;	
+	}
+	if($4>subject2){
+		subject2=$4;
+		rec2=$1;
+	}
+	if($5>subject3){
+		subject3=$5;
+		rec3=$1;	
+	}
+};
+END{
+	printf("Top scorer\n%s - %s(%d)\n%s - %s(%d)\n%s - %s(%d)\n",sub1,rec1,subject1,sub2,rec2,subject2, sub3, rec3, subject3);	
+}
 
-NR==1 {s1=$3; s2=$4; s3=$5}
 
-NR>1 {if(h1<=$3) {h1=$3; name1=$1}; if(h2<=$4) {h2=$4; name2=$1}; if(h3<=$5) {h3=$5; name3=$1}}
-
-END {printf("Top Scorers:\n\t%s -> %s (%d)\n\t%s -> %s (%d)\n\t%s -> %s (%d)\n",s1,name1,h1,s2,name2,h2,s3,name3,h3)}
-
-
-
-// awk1.awk
+// 4b3
 
 #!/usr/bin/awk -f
 
-BEGIN {FS="~"; highest=0}; NR>1 {total=$3+$4+$5; if(highest<total) {highest=total; rec=$0}}; END {print rec" Highest marks: "highest}
+BEGIN{
+	FS="~";
+	sum1=0;
+	sum2=0;
+	sum3=0;
+};
+NR==1{
+	sub1=$3;
+        sub2=$4;
+        sub3=$5;
+}
+NR>1 && NR<6{
+		sum1+=$3;
+		sum2+=$4;
+		sum3+=$5;
+}
+END{
+	avg1=sum1/(NR-1);
+	avg2=sum2/(NR-1);
+	avg3=sum3/(NR-1);
+	if(subName==sub1){
+		printf("Average of %s is %.2f\n", subName, avg1);
+	}else if(subName==sub2){
+		printf("Average of %s is %.2f\n", subName, avg2);
+	}else if(subName==sub3){
+		printf("Average of %s is %.2f\n", subName, avg3);
+	}else{
+		printf("Subject not found");
+	}
+	#printf("%.2f %.2f %.2f",avg1,avg2,avg3)
+}
 
 
+// 
 
-// Marks.dat
-
-NAME~ROLL~SUB1~SUB2~SUB3
-abc~001~50~76~45
-pqr~002~90~82~79
-mno~003~49~57~66
-xyz~004~29~58~70
-ijk~005~77~44~96
-
-
+echo "enter the subject name:"
+read sub_name
+awk -v subName=$sub_name -f prog4b3.awk Marks.dat
+#here passing the subName as as variable to prog4b3.awk
