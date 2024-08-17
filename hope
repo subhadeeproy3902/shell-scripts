@@ -90,6 +90,15 @@ END{
 
 // 
 
+
+Name~Roll~Subject_1~Subject_2~Subject_3
+John Doe~101~85~90~88
+Jane Smith~102~78~84~91
+Alice Johnson~103~92~87~95
+Bob Brown~104~75~80~83
+Charlie Davis~105~88~91~86
+
+
 echo "enter the subject name:"
 read sub_name
 awk -v subName=$sub_name -f prog4b3.awk Marks.dat
